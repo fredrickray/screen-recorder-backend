@@ -7,7 +7,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Define video upload route
-router.post('/upload', handleVideoUpload);
+router.post('/upload', upload.single('videoFile'), handleVideoUpload);
 router.get("/stream/:fileName", streamVideo)
 router.get("/stream", streamVideos)
 

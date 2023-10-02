@@ -8,8 +8,8 @@ const deepgram = new Deepgram(process.env.DEEPGRAM_API_KEY);
 const handleVideoUpload = async (req, res) => {
     try {
         // console.log(req)
-        const { file } = req
-        if (!file) {
+        // const { file } = req
+        if (!req.file || !req.file.buffer) {
             return res.status(400).send('No video file uploaded');
         }
 
@@ -21,11 +21,11 @@ const handleVideoUpload = async (req, res) => {
         const writeStream = fs.createWriteStream(filePath);
 
         // Pipe the file buffer to the write stream
-        // writeStream.write(req.file.buffer);
+        writeStream.write(req.file.buffer);
 
 
           // Extract audio from the video using ffmpeg
-          const audioPath = path.join(__dirname, 'videos', `audio_${Date.now()}.mp3`);
+          const audioPath = path.join(__dirname, '../videos', `audio_${Date.now()}.mp3`);
           let transcription;
 
         ffmpeg(filePath)
@@ -46,7 +46,10 @@ const handleVideoUpload = async (req, res) => {
                             // other options are available
                         });
                         transcription = response.results.channels[0].alternatives[0].transcript
-                        res.send(response.results.channels[0].alternatives[0].transcript)
+                        res.send({
+                            message: "Video uploaded and saved successfully",
+                            transcription
+                        })
                     } catch (error) {
                         console.log(error)
                     }
@@ -59,10 +62,10 @@ const handleVideoUpload = async (req, res) => {
         // When the stream is closed, it means the file is saved
         writeStream.end(() => {
             console.log('Video saved to disk:', fileName);
-            res.send({
-                message: "Video uploaded and saved successfully",
-                transcription
-            });
+            // res.status(206).send({
+            //     message: "Video uploaded and saved successfully",
+            //     // transcription
+            // });
         });
     } catch (error) {
         console.error('Error handling video upload:', error);

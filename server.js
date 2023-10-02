@@ -6,17 +6,6 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
-// const ffmpeg = require('ffmpeg');
-const whisper = require("whisper-node")
-// const command = ffmpeg()
-const OpenAi = require("openai")
-const axios = require("axios")
-const FormData = require("form-data")
-const openai = new OpenAi({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-const REQUIRE_SSL = false;
-const API_URL = "localhost:9999";
 const { Deepgram } = require("@deepgram/sdk");
 const deepgram = new Deepgram(process.env.DEEPGRAM_API_KEY);
 
