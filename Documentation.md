@@ -34,3 +34,8 @@ This function streams video content to the client. It reads a video file from th
 `Accept-Ranges`: Indicates that the server supports byte range requests.
 `Content-Length`: Specifies the length of the video chunk being sent.
 `Content-Type`: Specifies that the content is in MP4 video format.
+
+
+
+### NOTE 
+Endpoints were tested with postman and not from a request from the frontend, so it might not work well or at all with the frontend requests
