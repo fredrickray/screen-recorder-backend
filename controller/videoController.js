@@ -48,7 +48,7 @@ const handleVideoUpload = async (req, res) => {
                         transcription = response.results.channels[0].alternatives[0].transcript
                         res.send({
                             message: "Video uploaded and saved successfully",
-                            transcription
+                            transcription: response.results.channels[0].alternatives[0].transcript
                         })
                     } catch (error) {
                         console.log(error)
@@ -74,58 +74,58 @@ const handleVideoUpload = async (req, res) => {
 };
 
 
-const streamVideo = async (req, res) => {
-    try {
-        // Get the video file name from a parameter in the request
-        const { fileName } = req.params;
+// const streamVideo = async (req, res) => {
+//     try {
+//         // Get the video file name from a parameter in the request
+//         const { fileName } = req.params;
 
-        if(fileName === '') {
-            return res.status(400).json({ message: "Please provide a valid video ID" })
-        }
+//         if(fileName === '') {
+//             return res.status(400).json({ message: "Please provide a valid video ID" })
+//         }
 
-        // Define the directory where video files are stored
-        const videoDirectory = '/Users/fredrickanyanwu/Documents/screen-recorder-backend/videos';
+//         // Define the directory where video files are stored
+//         const videoDirectory = '/Users/fredrickanyanwu/Documents/screen-recorder-backend/videos';
 
-        // Check if the file exists in the directory
-        const videoPath = path.join(videoDirectory, fileName);
+//         // Check if the file exists in the directory
+//         const videoPath = path.join(videoDirectory, fileName);
 
-        if (!fs.existsSync(videoPath)) {
-            return res.status(404).send('Video not found');
-        }
+//         if (!fs.existsSync(videoPath)) {
+//             return res.status(404).send('Video not found');
+//         }
 
-        // Get the size of the video file
-        const size = fs.statSync(videoPath).size;
+//         // Get the size of the video file
+//         const size = fs.statSync(videoPath).size;
 
-        // Get the range header from the request
-        const { range } = req.headers;
+//         // Get the range header from the request
+//         const { range } = req.headers;
 
-        if (!range) {
-            return res.status(416).send('Range header needed');
-        }
+//         if (!range) {
+//             return res.status(416).send('Range header needed');
+//         }
 
-        // Parse the range header
-        const [start, end] = range.replace(/bytes=/, '').split('-');
-        const chunkSize = (end - start) + 1;
+//         // Parse the range header
+//         const [start, end] = range.replace(/bytes=/, '').split('-');
+//         const chunkSize = (end - start) + 1;
 
-        // Set headers for the response
-        const headers = {
-            'Content-Range': `bytes ${start}-${end}/${size}`,
-            'Accept-Ranges': 'bytes',
-            'Content-Length': chunkSize,
-            'Content-Type': 'video/mp4',
-        };
+//         // Set headers for the response
+//         const headers = {
+//             'Content-Range': `bytes ${start}-${end}/${size}`,
+//             'Accept-Ranges': 'bytes',
+//             'Content-Length': chunkSize,
+//             'Content-Type': 'video/mp4',
+//         };
 
-        // Send 206 Partial Content status code
-        res.writeHead(206, headers);
+//         // Send 206 Partial Content status code
+//         res.writeHead(206, headers);
 
-        // Create a read stream for the video file and pipe it to the response
-        const stream = fs.createReadStream(videoPath, { start: Number(start), end: Number(end) });
-        stream.pipe(res);
-    } catch (error) {
-        console.error('Error streaming video:', error);
-        res.status(500).send('Error streaming video');
-    }
-};
+//         // Create a read stream for the video file and pipe it to the response
+//         const stream = fs.createReadStream(videoPath, { start: Number(start), end: Number(end) });
+//         stream.pipe(res);
+//     } catch (error) {
+//         console.error('Error streaming video:', error);
+//         res.status(500).send('Error streaming video');
+//     }
+// };
 
 const fileName = '/Users/fredrickanyanwu/Documents/screen-recorder-backend/videos/video_1696206052687.mp4';
 const streamVideos = async (req, res) => {
